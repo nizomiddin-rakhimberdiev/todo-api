@@ -12,6 +12,8 @@ class TodoSerializer(serializers.Serializer):
     created_at = serializers.DateTimeField(default=datetime.now)
     updated_at = serializers.DateTimeField(default=datetime.now)
 
+    def create(self, validated_data):
+        return Todo.objects.create(**validated_data)
 
 class TodoModelSerializer(serializers.ModelSerializer):
     class Meta:

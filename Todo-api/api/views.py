@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from rest_framework import views, status
-from rest_framework.generics import ListAPIView
+from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from api.serializers import TodoSerializer
+from api.serializers import TodoSerializer, TodoModelSerializer
 from todo.models import Todo
 
 
@@ -32,3 +33,16 @@ class TodoDetailApiView(views.APIView):
             return Response(serializer.data)
         except Todo.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class TodoListView(generics.ListAPIView):
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
+    permission_classes = [IsAuthenticated]
+    # http_method_names = ['get']
+
+
+class TodoCreateAPIView(generics.CreateAPIView):
+    queryset = Todo.objects.all()
+    serializer_class = TodoModelSerializer
+    http_method_names = ['post']
